@@ -88,6 +88,19 @@ class ApplicationView(APIView):
         else:
             return Response({"error": "job_post가 존재하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
 
-        job_application = JobApplication.objects.create(candidate=user, jobpost=job_post)
+        data = {
+            'candidate': user.id
+        }
 
-        return Response(JobApplicationSerializer(job_application).data, status=status.HTTP_200_OK)
+        job_application_serializer = JobApplicationSerializer(data=data)
+
+        if job_application_serializer.is_valid():
+            job_application_serializer.save(jobpost=job_post)
+
+            return Response({'message': '저장 완료!'}, status=status.HTTP_200_OK)
+
+        return Response(job_application_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        # job_application = JobApplication.objects.create(candidate=user, jobpost=job_post)
+
+        # return Response(JobApplicationSerializer(job_application).data, status=status.HTTP_200_OK)

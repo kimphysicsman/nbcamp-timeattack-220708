@@ -7,8 +7,6 @@ class IsCandidateUser(BasePermission):
     message = '지원자만 사용하실 수 있습니다.'
     
     def has_permission(self, request, view):
-        print(request.user)
-
         try :
             user_type = request.user.user_type.user_type
         except:
